@@ -1,5 +1,6 @@
 import json
 from flask import Flask, request, Response
+import os
 from scraper import *
 
 app = Flask(__name__)
@@ -35,5 +36,6 @@ def search():
     return Response(json_string, content_type="application/json")
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
 
