@@ -1,7 +1,7 @@
 from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.firefox.service import Service
-from webdriver_manager.firefox import GeckoDriverManager
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager 
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 import time
 
@@ -14,7 +14,12 @@ def search_drugs(search_term, cep, drugstore_base_url):
 
     options = Options()
     options.add_argument("--headless=new")
-    driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
+    options.add_argument("--disable-gpu")
+    options.add_argument("--window-size=1920,1080")
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    options.add_experimental_option("useAutomationExtension", False)
+    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36")
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     driver.get(url)
     time.sleep(load_time)
 
