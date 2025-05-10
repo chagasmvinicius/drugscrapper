@@ -159,7 +159,7 @@
   <script>
     function buscar(event) {
       event.preventDefault();
-      const medicamento = document.getElementById("medicamento").value.trim();
+      const medicamento = document.getElementById("medicamento").value.trim().replaceAll(' ', '+');
       const cep = document.getElementById("cep").value.trim();
       const loading = document.getElementById("loading");
       const resultado = document.getElementById("resultado");
@@ -168,9 +168,7 @@
       loading.style.display = "block";
 
       fetch(
-        `http://127.0.0.1:5000/search?medicamento=${encodeURIComponent(
-          medicamento
-        )}&cep=${encodeURIComponent(cep)}`
+        `http://127.0.0.1:5000/search?medicamento=${medicamento}&cep=${cep}`
       )
         .then((response) => response.json())
         .then((data) => {
