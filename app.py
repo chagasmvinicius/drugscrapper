@@ -1,6 +1,6 @@
 import json
 from flask import Flask, request, Response
-from scrapper_v3 import *
+from scraper import *
 
 app = Flask(__name__)
 
