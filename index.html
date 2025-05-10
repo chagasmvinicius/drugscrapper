@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Busca de Medicamentos</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      color: #399238;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .search-box {
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    input[type="text"] {
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 24px;
+      box-sizing: border-box;
+      text-align: center;
+      width: 100%;
+    }
+
+    button {
+      padding: 14px;
+      font-size: 16px;
+      border: none;
+      background-color: #399238;
+      color: white;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #399238;
+    }
+
+    #loading {
+      margin-top: 20px;
+      color: #666;
+      font-size: 16px;
+      display: none;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    #resultado {
+      margin-top: 30px;
+      width: 100%;
+      padding: 0 16px;
+      box-sizing: border-box;
+      max-width: 500px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+      font-size: 11px;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .comprar-btn {
+      background-color: #34a853;
+      color: white;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .comprar-btn:hover {
+      background-color: #2c8e45;
+    }
+
+    @media (min-width: 600px) {
+      .logo {
+        font-size: 48px;
+      }
+
+      input[type="text"],
+      button {
+        font-size: 18px;
+      }
+
+      table {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="logo">Busca de Medicamentos</div>
+
+  <form class="search-box" onsubmit="buscar(event)">
+    <input type="text" id="medicamento" placeholder="Informe o medicamento" required />
+    <input type="text" id="cep" placeholder="Informe o CEP" required />
+    <button type="submit">Buscar</button>
+    <div id="loading">Carregando...</div>
+  </form>
+
+  <div id="resultado"></div>
+
+  <script>
+    function buscar(event) {
+      event.preventDefault();
+      const medicamento = document.getElementById("medicamento").value.trim();
+      const cep = document.getElementById("cep").value.trim();
+      const loading = document.getElementById("loading");
+      const resultado = document.getElementById("resultado");
+
+      resultado.innerHTML = "";
+      loading.style.display = "block";
+
+      fetch(
+        `http://127.0.0.1:5000/search?medicamento=${encodeURIComponent(
+          medicamento
+        )}&cep=${encodeURIComponent(cep)}`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          const drugs = data.drugs || [];
+
+          if (drugs.length === 0) {
+            resultado.innerHTML = "<p>Nenhum medicamento encontrado.</p>";
+            return;
+          }
+
+          let tabela = `
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Preço</th>
+                  <th>Farmácia</th>
+                  <th>Comprar</th>
+                </tr>
+              </thead>
+              <tbody>
+          `;
+
+          drugs.slice(0, 5).forEach((item) => {
+            tabela += `
+              <tr>
+                <td style="font-size: ">${item.description.slice(0, 15) + '...'}</td>
+                <td>${item.price_str}</td>
+                <td>${item.drugstore}</td>
+                <td><a href="${item.link}" target="_blank" class="comprar-btn">Comprar</a></td>
+              </tr>
+            `;
+          });
+
+          tabela += "</tbody></table>";
+          resultado.innerHTML = tabela;
+        })
+        .catch((error) => {
+          console.error("Erro ao buscar:", error);
+          resultado.innerHTML = "<p>Erro ao buscar dados.</p>";
+        })
+        .finally(() => {
+          loading.style.display = "none";
+        });
+    }
+  </script>
+</body>
+
+</html>

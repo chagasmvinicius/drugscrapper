@@ -1,9 +1,11 @@
 import json
 from flask import Flask, request, Response
+from flask_cors import CORS
 import os
 from scraper import *
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/search', methods=['GET'])
 def search():
