@@ -3,6 +3,7 @@ from flask import Flask, request, Response
 from flask_cors import CORS
 import os
 from scraper import *
+from panvel import *
 
 app = Flask(__name__)
 CORS(app)
@@ -15,7 +16,8 @@ def search():
     # Chamadas para o scraper
     results_drogaraia = search_drugs(drug, cep, 'https://www.drogaraia.com.br/')
     results_drogasil = search_drugs(drug, cep, 'https://www.drogasil.com.br/')
-    results = results_drogaraia + results_drogasil
+    results_panvel = consultar_panvel(drug, cep)
+    results = results_drogaraia + results_drogasil + results_panvel
 
     # Remover duplicatas por (id, link)
     checked = set()

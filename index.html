@@ -104,7 +104,6 @@
       border: 1px solid #ccc;
       padding: 10px;
       text-align: left;
-      font-size: 13px;
     }
 
     th {
@@ -192,7 +191,7 @@
               <tbody>
           `;
 
-          drugs.slice(0, 5).forEach((item) => {
+          drugs.forEach((item) => {
             tabela += `
               <tr>
                 <td style="font-size: ">${item.description.slice(0, 25) + '...'}</td>

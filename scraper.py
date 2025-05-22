@@ -5,12 +5,9 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import time
 
 def search_drugs(search_term, cep, drugstore_base_url):
-    drugstore_name = drugstore_base_url.split('.')[1].upper()
-    drugs = []
-    url = f'{drugstore_base_url}search?w={search_term}&viewport=&limit=24&p=1&sort=relevance%3Adesc'
-
     options = Options()
     options.add_argument("--headless=new")
     options.add_argument("--window-size=1920,1080")
@@ -19,9 +16,12 @@ def search_drugs(search_term, cep, drugstore_base_url):
     options.add_experimental_option("useAutomationExtension", False)
     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36")
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-    wait = WebDriverWait(driver, 10)
-    driver.get(url)
-    #driver.maximize_window()
+
+    wait = WebDriverWait(driver, 15)
+    driver.get(f'{drugstore_base_url}search?w={search_term}&viewport=&limit=24&p=1&sort=relevance%3Adesc')
+    driver.maximize_window()
+    time.sleep(2)
+    drugs = []
 
     try:
         accept_cookies_btn = driver.find_element(By.XPATH, '//button[@id="onetrust-accept-btn-handler"]')
@@ -39,7 +39,7 @@ def search_drugs(search_term, cep, drugstore_base_url):
 
     try:
         cep_input = driver.find_element(By.XPATH, '//input[@id="cep"]')
-        wait.until(EC.element_to_be_selected(cep_input))
+        wait.until(EC.visibility_of(cep_input))
         cep_input.clear()
         cep_input.send_keys(cep)
     except Exception as e:
@@ -114,8 +114,8 @@ def search_drugs(search_term, cep, drugstore_base_url):
                 'quantity': quantity,
                 'price': price,
                 'price_str': price_str,
-                'drugstore': drugstore_name
+                'drugstore': drugstore_base_url.split('.')[1].upper()
             })
 
-    driver.close()
+    driver.quit()
     return drugs
