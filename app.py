@@ -14,9 +14,9 @@ def search():
     cep = request.args.get('cep')
 
     # Chamadas para o scraper
-    results_drogaraia = search_drugs(drug, cep, 'https://www.drogaraia.com.br/')
-    results_drogasil = search_drugs(drug, cep, 'https://www.drogasil.com.br/')
-    results_panvel = consultar_panvel(drug, cep)
+    results_drogaraia = search_drugs_drogaraia(drug, cep, 'https://www.drogaraia.com.br/')
+    results_drogasil = search_drugs_drogaraia(drug, cep, 'https://www.drogasil.com.br/')
+    results_panvel = search_drugs_panvel(drug, cep)
     results = results_drogaraia + results_drogasil + results_panvel
 
     # Remover duplicatas por (id, link)

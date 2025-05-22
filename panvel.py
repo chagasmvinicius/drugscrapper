@@ -1,7 +1,7 @@
 import requests
 import json
 
-def consultar_panvel(termo_busca, cep):
+def search_drugs_panvel(termo_busca, cep):
     # Configuração da requisição
     url = f"https://www.panvel.com/api/v2/search"
     
@@ -51,7 +51,7 @@ def consultar_panvel(termo_busca, cep):
         items = dados['items']
         results = []
         
-        for item in items[:24]:
+        for item in items:
             results.append({
                 'id': item['panvelCode'],
                 'short_description': item['brandName'].strip(),

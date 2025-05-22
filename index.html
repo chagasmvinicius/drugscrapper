@@ -191,10 +191,10 @@
               <tbody>
           `;
 
-          drugs.forEach((item) => {
+          drugs.slice(0, 20).forEach((item) => {
             tabela += `
               <tr>
-                <td style="font-size: ">${item.description.slice(0, 20) + '...'}</td>
+                <td>${item.description.slice(0, 20) + '...'}</td>
                 <td>${item.price_str}</td>
                 <td>${item.drugstore}</td>
                 <td><a href="${item.link}" target="_blank" class="comprar-btn">Comprar</a></td>
