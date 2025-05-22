@@ -8,7 +8,7 @@
   <style>
     body {
       margin: 0;
-      padding: 20px;
+      padding: 15px;
       font-family: Arial, sans-serif;
       background: #fff;
       display: flex;
@@ -47,8 +47,8 @@
     }
 
     button {
-      padding: 14px;
-      font-size: 16px;
+      padding: 12px;
+      font-size: 15px;
       border: none;
       background-color: #399238;
       color: white;
@@ -194,7 +194,7 @@
           drugs.forEach((item) => {
             tabela += `
               <tr>
-                <td style="font-size: ">${item.description.slice(0, 25) + '...'}</td>
+                <td style="font-size: ">${item.description.slice(0, 20) + '...'}</td>
                 <td>${item.price_str}</td>
                 <td>${item.drugstore}</td>
                 <td><a href="${item.link}" target="_blank" class="comprar-btn">Comprar</a></td>
